@@ -3,7 +3,7 @@
 一个简单易用的自责单（检讨书）生成工具，支持在线填写、签名和生成图片。
 # 项目预览
 ## 菜单页
-![home](./images/home.png "首页")
+![home](/images/home.png "首页")
 ## 自责页
 ![index](/images/index.png "情侣版")
 ## 选择日期
