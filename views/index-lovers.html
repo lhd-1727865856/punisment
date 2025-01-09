@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情侣版自责单</title>
+    <link rel="stylesheet" href="/css/style-lovers.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        .signature-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signature-modal.active {
+            display: flex;
+        }
+
+        .signature-container {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .signature-canvas {
+            border: 2px solid #FFB6C1;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            touch-action: none;
+            background: #FFF0F5;
+        }
+
+        .signature-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .signature-button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .signature-save {
+            background: #FF69B4;
+            color: white;
+        }
+
+        .signature-clear {
+            background: #FFE4E1;
+            color: #FF69B4;
+            border: 1px solid #FFB6C1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form class="self-criticism-form">
+            <h1>情侣版自责单</h1>
+            
+            <div class="date-field">
+                <input type="date" id="dateInput" class="date-input">
+                <div class="date-display">
+                    <span class="year"></span>年
+                    <span class="month"></span>月
+                    <span class="day"></span>日
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>姓名：</label>
+                <input type="text" name="name">
+            </div>
+
+            <div class="form-group">
+                <label>事由：</label>
+                <textarea name="reason" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>自责书：</label>
+                <textarea name="apology" rows="5" placeholder="写下你的自责内容..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>惩罚：</label>
+                <textarea name="punishment" rows="3" placeholder="比如：请你吃饭/看电影/买奶茶..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>签字：</label>
+                <div class="signature-area"></div>
+            </div>
+        </form>
+        
+        <div class="share-button-container">
+            <button type="button" id="shareButton" class="share-button">
+                分享 📱
+            </button>
+        </div>
+    </div>
+
+    <div class="signature-modal">
+        <div class="signature-container">
+            <canvas class="signature-canvas"></canvas>
+            <div class="signature-buttons">
+                <button class="signature-button signature-clear">清除</button>
+                <button class="signature-button signature-save">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 日期处理
+        const dateInput = document.getElementById('dateInput');
+        const yearSpan = document.querySelector('.year');
+        const monthSpan = document.querySelector('.month');
+        const daySpan = document.querySelector('.day');
+
+        // 设置默认日期为今天
+        const today = new Date();
+        dateInput.valueAsDate = today;
+        updateDateDisplay(today);
+
+        dateInput.addEventListener('change', (e) => {
+            const selectedDate = new Date(e.target.value);
+            updateDateDisplay(selectedDate);
+        });
+
+        function updateDateDisplay(date) {
+            yearSpan.textContent = date.getFullYear();
+            monthSpan.textContent = String(date.getMonth() + 1).padStart(2, '0');
+            daySpan.textContent = String(date.getDate()).padStart(2, '0');
+        }
+
+        // 添加分享功能
+        document.getElementById('shareButton').addEventListener('click', async () => {
+            try {
+                // 创建加载提示
+                const loadingTip = document.createElement('div');
+                loadingTip.className = 'loading-tip';
+                loadingTip.textContent = '正在生成图片...';
+                document.body.appendChild(loadingTip);
+
+                // 获取分享按钮并临时隐藏
+                const shareButton = document.querySelector('.share-button-container');
+                shareButton.style.display = 'none';
+
+                // 保存所有输入框的值
+                const inputs = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
+                const inputValues = Array.from(inputs).map(input => ({
+                    element: input,
+                    value: input.value,
+                    type: input.type
+                }));
+
+                // 将输入框转换为span显示
+                inputValues.forEach(({element, value}) => {
+                    const span = document.createElement('span');
+                    span.textContent = value;
+                    span.style.cssText = `
+                        display: block;
+                        width: 100%;
+                        padding: 12px;
+                        border: 2px solid #FFB6C1;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        font-family: inherit;
+                        background-color: #FFF0F5;
+                        min-height: ${element.offsetHeight}px;
+                        color: #FF69B4;
+                        line-height: 1.5;
+                        white-space: pre-wrap;
+                        word-break: break-word;
+                    `;
+                    element.parentNode.insertBefore(span, element);
+                    element.style.display = 'none';
+                });
+
+                // 生成图片
+                const container = document.querySelector('.container');
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#FFE5E5',
+                    scale: 4,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    imageTimeout: 0,
+                    quality: 1.0
+                });
+
+                // 恢复输入框显示
+                inputValues.forEach(({element}) => {
+                    element.style.display = '';
+                    element.previousSibling.remove();
+                });
+
+                // 恢复显示分享按钮
+                shareButton.style.display = '';
+
+                // 创建图片预览遮罩层
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 999999;
+                    padding: 20px;
+                `;
+
+                // 创建图片元素
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL('image/png');
+                img.style.cssText = `
+                    max-width: 100%;
+                    max-height: 80vh;
+                    object-fit: contain;
+                    border-radius: 10px;
+                    margin-bottom: 20px;
+                `;
+
+                // 创建提示文本
+                const tipText = document.createElement('div');
+                tipText.style.cssText = `
+                    color: white;
+                    font-size: 16px;
+                    text-align: center;
+                    margin-bottom: 15px;
+                `;
+                tipText.textContent = '长按图片保存到相册';
+
+                // 创建关闭按钮
+                const closeButton = document.createElement('button');
+                closeButton.style.cssText = `
+                    background: #FF69B4;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 20px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    margin-top: 10px;
+                `;
+                closeButton.textContent = '关闭';
+
+                // 添加关闭事件
+                const closeOverlay = () => {
+                    overlay.remove();
+                    loadingTip.remove();
+                };
+
+                closeButton.onclick = closeOverlay;
+                overlay.onclick = (e) => {
+                    if (e.target === overlay) {
+                        closeOverlay();
+                    }
+                };
+
+                // 组装预览界面
+                overlay.appendChild(img);
+                overlay.appendChild(tipText);
+                overlay.appendChild(closeButton);
+                document.body.appendChild(overlay);
+
+                // 移除加载提示
+                loadingTip.remove();
+
+            } catch (error) {
+                console.error('生成图片失败:', error);
+                alert('生成图片失败，请重试');
+            }
+        });
+
+        // 签字功能
+        const signatureArea = document.querySelector('.signature-area');
+        const modal = document.querySelector('.signature-modal');
+        const canvas = document.querySelector('.signature-canvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.querySelector('.signature-clear');
+        const saveBtn = document.querySelector('.signature-save');
+        
+        // 设置画布大小
+        function resizeCanvas() {
+            const container = document.querySelector('.signature-container');
+            const width = container.clientWidth - 40; // 减去内边距
+            const height = Math.min(300, window.innerHeight * 0.4);
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // 设置绘图上下文的样式
+            ctx.strokeStyle = '#FF69B4';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+
+        // 初始化签字相关事件
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            [lastX, lastY] = [x, y];
+        }
+
+        // 打开签字板
+        signatureArea.addEventListener('click', () => {
+            modal.classList.add('active');
+            resizeCanvas();
+        });
+
+        // 清除签字
+        clearBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // 保存签字
+        saveBtn.addEventListener('click', () => {
+            const signatureImage = canvas.toDataURL();
+            signatureArea.style.backgroundImage = `url(${signatureImage})`;
+            signatureArea.style.backgroundSize = 'contain';
+            signatureArea.style.backgroundPosition = 'center';
+            signatureArea.style.backgroundRepeat = 'no-repeat';
+            signatureArea.classList.add('has-signature');
+            modal.classList.remove('active');
+        });
+
+        // 绘画事件监听
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            [lastX, lastY] = [
+                e.clientX - rect.left,
+                e.clientY - rect.top
+            ];
+        });
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+
+        // 触摸设备支持
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            isDrawing = true;
+            [lastX, lastY] = [
+                touch.clientX - rect.left,
+                touch.clientY - rect.top
+            ];
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            draw(e);
+        });
+
+        canvas.addEventListener('touchend', () => isDrawing = false);
+
+        // 点击模态框外部关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // 窗口大小改变时重置画布大小
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html> 

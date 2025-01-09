@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "YouYuan", "幼圆", "STXihei", "华文细黑", sans-serif;
+    background-color: #FFF0F5;  /* 更浅的粉色背景 */
+    padding: 20px;
+    /* 爱心背景图案 */
+    background-image: 
+        radial-gradient(circle at 50% 40%, #FFB6C1 3px, transparent 4px),
+        radial-gradient(circle at 50% 60%, #FFB6C1 3px, transparent 4px);
+    background-size: 30px 30px;
+    background-position: 0 0;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 30px;  /* 更圆的边角 */
+    box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+    border: 4px solid #FFB6C1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 添加装饰性爱心 */
+.container::before,
+.container::after {
+    content: "💕";
+    position: absolute;
+    font-size: 24px;
+    opacity: 0.6;
+}
+
+.container::before {
+    top: 10px;
+    left: 10px;
+}
+
+.container::after {
+    bottom: 10px;
+    right: 10px;
+}
+
+.self-criticism-form {
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 20px;
+    color: #FF69B4;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+/* 标题装饰 */
+h1::before,
+h1::after {
+    content: "♥";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #FFB6C1;
+    font-size: 20px;
+}
+
+h1::before {
+    left: 20%;
+}
+
+h1::after {
+    right: 20%;
+}
+
+.date-field {
+    position: relative;
+    text-align: right;
+    margin-bottom: 25px;
+    color: #FF69B4;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.date-input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    z-index: 1;
+}
+
+.date-display {
+    position: relative;
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #FFF0F5;
+    border: 3px solid #FFB6C1;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    min-width: 160px;
+    text-align: center;
+    color: #FF69B4;
+}
+
+.date-display:hover {
+    background-color: #FFE4E1;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.2);
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #FF69B4;
+    font-size: 18px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 15px;
+    border: 3px solid #FFB6C1;
+    border-radius: 15px;
+    font-size: 16px;
+    font-family: inherit;
+    background-color: #FFF0F5;
+    transition: all 0.3s ease;
+    color: #FF69B4;
+}
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255, 105, 180, 0.5);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #FF69B4;
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+    transform: scale(1.01);
+    color: #FF1493;
+}
+
+.signature-area {
+    height: 120px;
+    border: 3px dashed #FFB6C1;
+    border-radius: 15px;
+    margin-top: 8px;
+    background-color: #FFF0F5;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.signature-area:hover {
+    border-color: #FF69B4;
+    transform: scale(1.01);
+}
+
+.signature-area::before {
+    content: "💝";  /* 更可爱的签名图标 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    opacity: 0.6;
+}
+
+.signature-area.has-signature::before {
+    display: none;
+}
+
+/* 移除输入框的铅笔图标 */
+.form-group::before {
+    display: none;
+}
+
+/* 分享按钮样式 */
+.share-button-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.share-button {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    box-shadow: 0 6px 12px rgba(255, 105, 180, 0.4);
+}
+
+.share-button:hover {
+    background-color: #FF1493;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 15px rgba(255, 105, 180, 0.5);
+}
+
+.share-button:active {
+    transform: translateY(0);
+}
+
+/* 签字板样式 */
+.signature-modal {
+    background-color: rgba(255, 182, 193, 0.3) !important;
+}
+
+.signature-container {
+    border: 4px solid #FFB6C1;
+    background: #FFF0F5;
+}
+
+.signature-canvas {
+    border: 3px solid #FFB6C1;
+    border-radius: 15px;
+}
+
+.signature-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.signature-button:hover {
+    transform: translateY(-2px);
+}
+
+/* 提示框样式 */
+.loading-tip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 105, 180, 0.9);
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+    color: white;
+}
+
+.loading-tip.success {
+    background-color: rgba(255, 182, 193, 0.9);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    input, textarea {
+        font-size: 15px;
+    }
+
+    .signature-button {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+} 
+
+/* 日期数字样式 */
+.year, .month, .day {
+    display: inline-block;
+    min-width: 20px;
+    text-align: center;
+    background: white;
+    padding: 2px 4px;
+    border-radius: 8px;
+    margin: 0 2px;
+    color: #FF1493;
+    font-weight: bold;
+}
+
+/* 添加小图标 */
+.date-display::before {
+    content: "📅";
+    font-size: 14px;
+    margin-right: 5px;
+    opacity: 0.7;
+} 

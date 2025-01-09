@@ -1,0 +1,217 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "YouYuan", "幼圆", "STXihei", "华文细黑", sans-serif;
+    background-color: #FFE5E5;
+    padding: 20px;
+    background-image: radial-gradient(#fff 10%, transparent 11%),
+                     radial-gradient(#fff 10%, transparent 11%);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(255, 182, 193, 0.3);
+    border: 3px solid #FFB6C1;
+}
+
+.self-criticism-form {
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #FF69B4;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+}
+
+.date-field {
+    position: relative;
+    text-align: right;
+    margin-bottom: 20px;
+    color: #FF69B4;
+}
+
+.date-input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    z-index: 1;
+}
+
+.date-display {
+    position: relative;
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #FFF0F5;
+    border: 2px solid #FFB6C1;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.date-display:hover {
+    background-color: #FFE4E1;
+}
+
+/* 确保日期显示的数字对齐 */
+.year, .month, .day {
+    display: inline-block;
+    min-width: 30px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #FF69B4;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #FFB6C1;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    background-color: #FFF0F5;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #FF69B4;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    transform: scale(1.01);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.signature-area {
+    height: 100px;
+    border: 2px dashed #FFB6C1;
+    border-radius: 10px;
+    margin-top: 5px;
+    background-color: #FFF0F5;
+    position: relative;
+}
+
+.signature-area::before {
+    content: "✍️";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    opacity: 0.5;
+}
+
+/* 当有签名时隐藏提示图标 */
+.signature-area.has-signature::before {
+    display: none;
+}
+
+.form-group::before {
+    content: "✏️";
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+/* 适配移动端 */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    input, textarea {
+        font-size: 14px;
+    }
+}
+
+/* 添加分享按钮样式 */
+.share-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.share-button {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+}
+
+.share-button:hover {
+    background-color: #FF1493;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 105, 180, 0.4);
+}
+
+.share-button:active {
+    transform: translateY(0);
+}
+
+/* 加载提示样式 */
+.loading-tip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.loading-tip.success {
+    background-color: rgba(76, 175, 80, 0.9);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+} 
